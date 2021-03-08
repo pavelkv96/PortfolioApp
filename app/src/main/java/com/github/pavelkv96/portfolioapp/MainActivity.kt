@@ -1,102 +1,55 @@
-package com.github.pavelkv96.portfolioapp;
+package com.github.pavelkv96.portfolioapp
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.github.pavelkv96.portfolioapp.cv.CVFragment
+import com.github.pavelkv96.portfolioapp.home.HomeFragment
+import com.github.pavelkv96.portfolioapp.portfolio.PortfolioFragment
+import com.github.pavelkv96.portfolioapp.sidemenu.MenuAdapter
+import com.github.pavelkv96.portfolioapp.sidemenu.MenuItem
+import com.github.pavelkv96.portfolioapp.sidemenu.MenuUtil
+import com.github.pavelkv96.portfolioapp.sidemenu.MenuUtil.getMenuList
+import com.github.pavelkv96.portfolioapp.team.TeamFragment
 
-import android.os.Bundle;
+class MainActivity : AppCompatActivity(), (Int) -> Unit {
+    var menuRv: RecyclerView? = null
+    var menuItems: List<MenuItem>? = null
+    var menuAdapter: MenuAdapter? = null
+    var selectedMenuPos = 0
 
-import com.github.pavelkv96.portfolioapp.cv.CVFragment;
-import com.github.pavelkv96.portfolioapp.home.HomeFragment;
-import com.github.pavelkv96.portfolioapp.portfolio.PortfolioFragment;
-import com.github.pavelkv96.portfolioapp.sidemenu.Callback;
-import com.github.pavelkv96.portfolioapp.sidemenu.MenuAdapter;
-import com.github.pavelkv96.portfolioapp.sidemenu.MenuItem;
-import com.github.pavelkv96.portfolioapp.sidemenu.MenuUtil;
-import com.github.pavelkv96.portfolioapp.team.TeamFragment;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
 
-import java.util.List;
+        menuRv = findViewById(R.id.rv_side_menu)
+        menuItems = getMenuList()
+        menuAdapter = MenuAdapter(menuItems!!, this)
 
-public class MainActivity extends AppCompatActivity implements Callback {
-
-    RecyclerView menuRv;
-    List<MenuItem> menuItems;
-    MenuAdapter adapter;
-    int selectedMenuPos = 0 ;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
-
-        // setup side menu
-        setupSideMenu();
-
-        // set the default fragment when activity launch
-        setHomeFragment();
-
-
-
-    }
-
-    private void setupSideMenu() {
-
-        menuRv = findViewById(R.id.rv_side_menu);
-
-        // get menu list item  will get data from a static data class
-
-        menuItems = MenuUtil.getMenuList();
-        adapter = new MenuAdapter(menuItems,this);
-        menuRv.setLayoutManager(new LinearLayoutManager(this));
-        menuRv.setAdapter(adapter);
-
-    }
-
-    void setPortfoliofragment() {
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,new PortfolioFragment()).commit();
-
-    }
-
-    void setTeamFragment () {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,new TeamFragment()).commit();
-    }
-
-    void setCVFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,new CVFragment()).commit();
-    }
-
-
-    void setHomeFragment() {
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,new HomeFragment()).commit();
-
-    }
-
-
-    @Override
-    public void onSideMenuItemClick(int i) {
-
-        switch (menuItems.get(i).getCode()) {
-
-            case MenuUtil.HOME_FRAGMENT_CODE : setHomeFragment();
-            break;
-            case MenuUtil.CV_FRAGMENT_CODE : setCVFragment();
-            break;
-            case MenuUtil.TEAM_FRAGMENT_CODE: setTeamFragment();
-            break;
-            case MenuUtil.PORTFOLIO_FRAGMENT_CODE:setPortfoliofragment();
-            break;
-            default: setHomeFragment();
+        menuRv?.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            setHasFixedSize(true)
+            adapter = menuAdapter
         }
 
-        // hightligh the selected menu item
+        invoke(selectedMenuPos)
+    }
 
-        menuItems.get(selectedMenuPos).setSelected(false);
-        menuItems.get(i).setSelected(true);
-        selectedMenuPos = i ;
-        adapter.notifyDataSetChanged();
+    override fun invoke(i: Int) {
+        val fragment = when (menuItems!![i].code) {
+            MenuUtil.HOME_FRAGMENT_CODE -> HomeFragment.newInstance()
+            MenuUtil.CV_FRAGMENT_CODE -> CVFragment.newInstance()
+            MenuUtil.TEAM_FRAGMENT_CODE -> TeamFragment.newInstance()
+            MenuUtil.PORTFOLIO_FRAGMENT_CODE -> PortfolioFragment.newInstance()
+            else -> HomeFragment.newInstance()
+        }
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
 
+        menuItems!![selectedMenuPos].isSelected = false
+        menuItems!![i].isSelected = true
+        selectedMenuPos = i
+        menuAdapter!!.notifyDataSetChanged()
     }
 }

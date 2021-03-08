@@ -1,22 +1,12 @@
-package com.github.pavelkv96.portfolioapp.home;
+package com.github.pavelkv96.portfolioapp.home
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.github.pavelkv96.portfolioapp.R
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import com.github.pavelkv96.portfolioapp.R;
-
-public class HomeFragment extends Fragment {
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home,container,false);
+class HomeFragment : Fragment(R.layout.fragment_home) {
+    companion object {
+        @JvmStatic
+        fun newInstance(): HomeFragment = HomeFragment().also { it.arguments = Bundle().apply { } }
     }
 }

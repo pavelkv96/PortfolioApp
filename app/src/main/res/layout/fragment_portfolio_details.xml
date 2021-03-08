@@ -4,19 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".portfolio.PortfolioFragmentDetails"
-    >
+    tools:context=".portfolio.PortfolioFragmentDetails">
 
 
     <ImageView
-        android:scaleType="centerCrop"
         android:id="@+id/portfolio_details_img"
         android:layout_width="0dp"
         android:layout_height="248dp"
-        android:src="@drawable/ic_launcher_background"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/project0" />
 
     <TextView
         android:id="@+id/portfolio_details_title"
@@ -25,11 +24,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="Project Name"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/portfolio_details_img" />
+        app:layout_constraintTop_toBottomOf="@+id/portfolio_details_img"
+        tools:text="Project Name" />
 
     <TextView
         android:id="@+id/portfolio_details_desc"
@@ -42,11 +41,11 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp"
         android:lineSpacingExtra="8sp"
-        android:text="@string/lorem_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/portfolio_details_title"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="@string/lorem_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

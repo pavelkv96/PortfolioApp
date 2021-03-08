@@ -1,75 +1,48 @@
-package com.github.pavelkv96.portfolioapp.portfolio;
+package com.github.pavelkv96.portfolioapp.portfolio
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.github.pavelkv96.portfolioapp.R
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class PortfolioFragmentDetails : BottomSheetDialogFragment() {
+    private var imgPortfolio: ImageView? = null
+    private var title: TextView? = null
+    private var description: TextView? = null
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.github.pavelkv96.portfolioapp.R;
-import com.bumptech.glide.Glide;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-public class PortfolioFragmentDetails extends BottomSheetDialogFragment {
-
-
-    private ImageView imgPortfolio;
-    private TextView title,description;
-
-
-
-    public PortfolioFragmentDetails() {
-        // Required empty public constructor
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_portfolio_details, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        imgPortfolio = view.findViewById(R.id.portfolio_details_img)
+        title = view.findViewById(R.id.portfolio_details_title)
+        description = view.findViewById(R.id.portfolio_details_desc)
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        val item = requireArguments().getSerializable("object") as PortfolioItem?
+        loadPortfolioData(item)
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_portfolio_details, container, false);
+    private fun loadPortfolioData(item: PortfolioItem?) {
+        item?.let {
+            Glide.with(requireContext()).load(it.image).into(imgPortfolio!!)
+            title?.text = it.title
+            description?.text = it.description
+        }
     }
 
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        imgPortfolio = view.findViewById(R.id.portfolio_details_img);
-        title = view.findViewById(R.id.portfolio_details_title);
-        description = view.findViewById(R.id.portfolio_details_desc);
-
-        // first we need to get our portfolio object from the bundle we have sent
-
-        Bundle bundle = getArguments();
-        PortfolioItem item = (PortfolioItem) bundle.getSerializable("object");
-
-        // now we have the item we need just to load it
-
-        loadPortfolioData(item);
-
-
-
+    companion object {
+        @JvmStatic
+        fun newInstance(portfolioData: PortfolioItem): PortfolioFragmentDetails {
+            return PortfolioFragmentDetails().also {
+                it.arguments = Bundle().apply { putSerializable("object", portfolioData) }
+            }
+        }
     }
-
-    void loadPortfolioData(PortfolioItem item) {
-
-        Glide.with(getContext()).load(item.getImage()).into(imgPortfolio);
-        // bind title and description ...
-
-    }
-
-
 }

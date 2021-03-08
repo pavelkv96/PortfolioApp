@@ -1,68 +1,47 @@
-package com.github.pavelkv96.portfolioapp.team;
+package com.github.pavelkv96.portfolioapp.team
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.github.pavelkv96.portfolioapp.R
 
-import android.os.Bundle;
+class TeamFragment : Fragment() {
+    var teamList: RecyclerView? = null
+    var teamAdapter: TeamAdapter? = null
+    var teamData: MutableList<TeamItem>? = null
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.github.pavelkv96.portfolioapp.R;
-
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class TeamFragment extends Fragment {
-
-
-    RecyclerView RvTeam;
-    TeamAdapter adapter;
-    List<TeamItem> mdata;
-
-    public TeamFragment() {
-        // Required empty public constructor
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        teamData = mutableListOf()
+        teamData?.apply {
+            add(TeamItem("Jhon Doe", getString(R.string.lorem_text2), R.drawable.user))
+            add(TeamItem("Ahmed Ali", getString(R.string.lorem_text2), R.drawable.uservoyager))
+            add(TeamItem("Islam Ahmed", getString(R.string.lorem_text2), R.drawable.userspace))
+            teamAdapter = TeamAdapter(this)
+        }
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_team, container, false);
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_team, container, false)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        teamList = view.findViewById(R.id.rv_team)
 
-        RvTeam = view.findViewById(R.id.rv_team);
+        teamList?.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = teamAdapter
+        }
+    }
 
-        // create list of team items
-
-        TeamItem item = new TeamItem("Jhon Doe",getString(R.string.lorem_text2),R.drawable.user);
-        TeamItem item2 = new TeamItem("Ahmed Ali",getString(R.string.lorem_text2),R.drawable.uservoyager);
-        TeamItem item3 = new TeamItem("Islam Ahmed",getString(R.string.lorem_text2),R.drawable.userspace);
-
-        mdata = new ArrayList<>();
-        mdata.add(item);
-        mdata.add(item2);
-        mdata.add(item3);
-
-        // setup adapter and recyclerview
-
-        RvTeam.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TeamAdapter(mdata);
-        RvTeam.setAdapter(adapter);
-
-
+    companion object {
+        @JvmStatic
+        fun newInstance(): TeamFragment = TeamFragment().also { it.arguments = Bundle().apply {  } }
     }
 }

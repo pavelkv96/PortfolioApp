@@ -1,72 +1,23 @@
-package com.github.pavelkv96.portfolioapp.sidemenu;
+package com.github.pavelkv96.portfolioapp.sidemenu
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.github.pavelkv96.portfolioapp.R
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class MenuAdapter(
+        private val mData: List<MenuItem>,
+        private val listener: (Int) -> Unit
+) : RecyclerView.Adapter<MenuViewHolder>() {
 
-import com.github.pavelkv96.portfolioapp.R;
-
-import java.util.List;
-
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
-
-    List<MenuItem> mData ;
-    Callback listener;
-
-
-    public MenuAdapter(List<MenuItem> mData,Callback listener) {
-        this.mData = mData;
-        this.listener = listener;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_menu, parent, false)
+        return MenuViewHolder(view, listener)
     }
 
-    @NonNull
-    @Override
-    public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu,parent,false);
-        return new MenuViewHolder(view);
+    override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
+        mData.getOrNull(position)?.let { holder.bind(it) }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
-
-        holder.icon.setImageResource(mData.get(position).getIcon());
-        if (mData.get(position).isSelected()) {
-            holder.isSelected.setVisibility(View.VISIBLE);
-        }
-        else
-            holder.isSelected.setVisibility(View.GONE);
-
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return mData.size();
-    }
-
-    public class MenuViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView icon,isSelected;
-
-        public MenuViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            icon = itemView.findViewById(R.id.item_menu_icon);
-            isSelected = itemView.findViewById(R.id.item_menu_selected);
-
-            // menu item click listener
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onSideMenuItemClick(getAdapterPosition());
-                }
-            });
-
-
-        }
-    }
+    override fun getItemCount(): Int = mData.size
 }
